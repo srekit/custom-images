@@ -17,7 +17,8 @@ jobs:
   changed-images:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.changed-files.outputs.modified_directories }}
+      matrix: ${{ coalesce(steps.changed-files.outputs.modified_directories, '[]') }}
+
 
     steps:
       - name: ⬇️ Checkout code
@@ -36,27 +37,6 @@ jobs:
           dir_names: true
           dir_names_max_depth: 1
           files_ignore: '.github/**'
-
-      - name: 🔀 Set Final Matrix Output (Guaranteed JSON)
-        id: set-matrix
-        run: |
-          # 1. Usamos 'coalesce' para retornar '[]' se o output da action for nulo ou vazio.
-          # 2. Em seguida, usamos 'replace' para remover as aspas em torno da string literal '[]'.
-          # Isso é um hack necessário para que a string de JSON seja passada corretamente.
-          FINAL_MATRIX="${{ steps.changed-files.outputs.modified_directories }}"
-          
-          # Se o valor for vazio, ele é passado como string vazia. 
-          # Usamos um 'if' simples para fazer o fallback.
-          
-          OUTPUT_VALUE="${{ steps.changed-files.outputs.modified_directories }}"
-          
-          if [[ -z "$OUTPUT_VALUE" ]]; then
-            echo "final_matrix=[]" >> $GITHUB_OUTPUT
-            echo "DEBUG: Final matrix output set to: [] (Fallback)"
-          else
-            echo "final_matrix=$OUTPUT_VALUE" >> $GITHUB_OUTPUT
-            echo "DEBUG: Final matrix output set to: $OUTPUT_VALUE"
-          fi
 
 
   build-and-push:
