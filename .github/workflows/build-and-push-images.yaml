@@ -17,7 +17,7 @@ jobs:
   changed-images:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ coalesce(steps.changed-files.outputs.modified_directories, '[]') }}
+      matrix: ${{ steps.set-matrix.outputs.final_matrix }}
 
 
     steps:
@@ -38,6 +38,24 @@ jobs:
           dir_names_max_depth: 1
           files_ignore: '.github/**'
 
+      - name: 🔀 Set Final Matrix Output (Guaranteed JSON)
+        id: set-matrix
+        run: |
+          # Atribuímos o valor do output da action a uma variável de shell.
+          # Nota: O 'if' do shell ainda será executado mesmo que o valor seja nulo/vazio.
+          RAW_OUTPUT="${{ steps.changed-files.outputs.modified_directories }}"
+          
+          FINAL_MATRIX="[]" # Valor default (fallback)
+          
+          # Verifica se a string não está vazia.
+          # Se a Action retornar nomes, o valor será usado.
+          if [[ -n "$RAW_OUTPUT" ]]; then
+            FINAL_MATRIX="$RAW_OUTPUT"
+          fi
+          
+          # Passamos o valor garantido (será '[]' ou o JSON da Action) como output do step.
+          echo "final_matrix=$FINAL_MATRIX" >> $GITHUB_OUTPUT
+          echo "DEBUG: Final matrix output set to: $FINAL_MATRIX"
 
   build-and-push:
     runs-on: ubuntu-latest
