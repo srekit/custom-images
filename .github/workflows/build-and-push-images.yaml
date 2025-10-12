@@ -16,6 +16,8 @@ on:
 jobs:
   changed-images:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       matrix: ${{ steps.set-matrix.outputs.final_matrix }}
 
