@@ -49,10 +49,7 @@ jobs:
           
           # Passamos a variável de ambiente para o output do job
           echo "final_matrix=$FINAL_MATRIX" >> $GITHUB_OUTPUT
-
-      - name: Check if any Dockerfile directory was modified
-        if: steps.changed-files.outputs.modified_directories == '[]'
-        run: echo "No Dockerfile was modified, therefore, next job will be skipped."
+          echo "DEBUG: Final matrix output: $FINAL_MATRIX"
 
 
   build-and-push:
