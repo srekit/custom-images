@@ -11,7 +11,7 @@ RUN apt-get update \
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python -
 ENV PATH="$PATH:/opt/poetry/bin"
 
-# Validate workflow3
+# Validate workflow12
 RUN pip install --no-cache-dir \
     pytest \
     bandit \
