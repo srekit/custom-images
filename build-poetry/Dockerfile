@@ -1,10 +1,11 @@
-FROM python:3.11-slim-bookworm
+FROM python:3.14.0-slim
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-       git \
-       curl \
-       build-essential \
+      build-essential \
+      curl \
+      git \
+      gnupg \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
