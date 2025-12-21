@@ -1,15 +1,16 @@
 FROM python:3.14.0-slim
 
-RUN curl -sfL https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor -o /usr/share/keyrings/trivy.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | tee /etc/apt/sources.list.d/trivy.list
-
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
       build-essential \
       curl \
       git \
-      gnupg \
-      trivy
+      gnupg
+
+RUN curl -sfL https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor -o /usr/share/keyrings/trivy.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | tee /etc/apt/sources.list.d/trivy.list \
+    && apt-get update \
+    && apt-get install -y trivy
 
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
