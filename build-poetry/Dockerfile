@@ -1,12 +1,17 @@
 FROM python:3.14.0-slim
 
+RUN curl -sfL https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor -o /usr/share/keyrings/trivy.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | tee /etc/apt/sources.list.d/trivy.list
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
       build-essential \
       curl \
       git \
       gnupg \
-    && apt-get clean \
+      trivy
+
+RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python -
@@ -17,4 +22,8 @@ RUN pip install --no-cache-dir \
     bandit \
     pylint
 
+RUN groupadd -r appuser && useradd -r -g appuser -m -d /home/appuser appuser \
+    && chown -R appuser:appuser /app
+
+USER appuser
 WORKDIR /app
