@@ -30,7 +30,7 @@ RUN pip install --no-cache-dir \
     pylint
 
 RUN groupadd -r -g ${GROUP_UID} ${GROUPNAME} \
-    && useradd -r -u ${USER_UID} -g ${USERNAME} -m -d ${USER_HOME} ${USERNAME} \
+    && useradd -r -u ${USER_UID} -g ${USERNAME} -m -d ${USER_HOME} ${USERNAME}
 
 ENV TRIVY_CACHE_DIR=/opt/trivy-cache
 RUN mkdir -p ${TRIVY_CACHE_DIR} \
