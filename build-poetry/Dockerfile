@@ -6,7 +6,14 @@ RUN apt-get update \
       curl \
       git \
       gnupg \
-    && apt-get clean \
+      jq
+
+RUN curl -sfL https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor -o /usr/share/keyrings/trivy.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | tee /etc/apt/sources.list.d/trivy.list \
+    && apt-get update \
+    && apt-get install -y trivy
+
+RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python -
@@ -17,4 +24,4 @@ RUN pip install --no-cache-dir \
     bandit \
     pylint
 
-WORKDIR /app
+RUN trivy image --download-db-only
