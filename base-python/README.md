@@ -1,6 +1,6 @@
-# Base Poetry
+# Base Python
 
-A Docker image based on Python `3.14 slim`, configured with a non-root user for running Poetry applications.
+A Docker image based on Python `3.14 slim`, configured with a non-root user for running Python applications.
 
 ## Features:
 
@@ -12,7 +12,7 @@ A Docker image based on Python `3.14 slim`, configured with a non-root user for 
 
 | Argument  | Default Value | Description                    | 
 |-----------|---------------|--------------------------------|
-| USERNAME  | poetry        | Name of the non-root user      |
+| USERNAME  | app           | Name of the non-root user      |
 | USER_UID  | 1000          | User ID for the created user   |
 | USER_GID  | 1000          | Group ID for the created group |
 | WORKDIR   | /app          | Working directory path         |
